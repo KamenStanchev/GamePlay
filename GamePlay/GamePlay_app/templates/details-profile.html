@@ -8,14 +8,14 @@
             <div class="game-header">
                 <!-- default profile image (if the user does NOT have any)-->
                 {% if profile.profile_picture is not None %}
-                <img class="game-img" src='{{ profile.profile_picture }}' alt="has-profile-image"/>
-{#                <!-- if the user has a profile image -->#}
-{#
+                    <img class="game-img" src='{{ profile.profile_picture }}' alt="has-profile-image"/>
                 {% else %}
-                 <img class="game-img" src="/GamePlay/static/images/default-user.jpg" alt='no-profile-image'/>}
-                <!-- user full name (if any) -->
+                    <img class="game-img" src="/GamePlay/static/images/default-user.jpg" alt='no-profile-image'/>
+
                 {% endif %}
-                <h1>{{ full_name }}</h1>
+                {% if full_name is not None %}
+                    <h1>{{ full_name }}</h1>
+                {% endif %}
                 <!-- user email -->
                 <p class="text">{{ profile.email }}</p>
                 <!-- user age -->

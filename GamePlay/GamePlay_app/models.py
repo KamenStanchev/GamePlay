@@ -32,6 +32,8 @@ class Profile(models.Model):
     )
 
 
+
+
 class Model(models.Model):
     title = models.CharField(
         'Title',

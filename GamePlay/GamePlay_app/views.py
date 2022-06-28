@@ -1,6 +1,7 @@
+from django import forms
 from django.shortcuts import render, redirect
 
-from GamePlay.GamePlay_app.forms import ModelForm
+from GamePlay.GamePlay_app.forms import ModelForm, ProfileForm
 from GamePlay.GamePlay_app.models import Profile, Model
 
 
@@ -59,16 +60,54 @@ def game_details(request, id):
     return render(request, 'details-game.html', context)
 
 
-def game_edit(request):
-    return render(request, 'edit-game.html')
+def game_edit(request, id):
+    model = Model.objects.get(id=id)
+    if request.method == 'POST':
+        form = ModelForm(request.POST, instance=model)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = ModelForm(instance=model)
+    context = {
+        'form': form,
+        'model': model,
+    }
+    return render(request, 'edit-game.html', context)
 
 
-def game_delete(request):
-    return render(request, 'delete-game.html')
+def game_delete(request, id):
+    model = Model.objects.get(id=id)
+    form = ModelForm(instance=model)
+    for field in form.fields:
+        form.fields[field].disabled = True
+    if request.method == 'POST':
+        model.delete()
+        return redirect('dashboard')
+    context = {
+        'model': model,
+        'form': form, }
+    return render(request, 'delete-game.html', context)
 
 
 def profile_create(request):
-    return render(request, 'create-profile.html')
+    not_profile = True
+    if request.method == 'POST':
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home_page')
+    else:
+        form = ProfileForm()
+        form.fields['first_name'].widget = forms.HiddenInput()
+        form.fields['last_name'].widget = forms.HiddenInput()
+        form.fields['profile_picture'].widget = forms.HiddenInput()
+
+    context = {
+        'form': form,
+        'not_profile': not_profile,
+    }
+    return render(request, 'create-profile.html', context)
 
 
 def profile_details(request):
@@ -76,10 +115,18 @@ def profile_details(request):
     models = Model.objects.all()
     total_games = len(models)
     if total_games > 0:
-        average_rating = sum(model.rating for model in models)/total_games
+        average_rating = sum(model.rating for model in models) / total_games
     else:
         average_rating = 0.0
-    full_name = profile.first_name + ' ' + profile.last_name
+    full_name = None
+    if profile.first_name:
+        full_name = profile.first_name
+    if profile.last_name:
+        if full_name is None:
+            full_name = profile.last_name
+        else:
+            full_name += ' '
+            full_name += profile.last_name
 
     context = {
         'profile': profile,
@@ -91,8 +138,21 @@ def profile_details(request):
 
 
 def profile_edit(request):
-    return render(request, 'edit-profile.html')
+    profile = get_profile()
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_details')
+    else:
+        form = ProfileForm(instance=profile)
+    context = {'form': form}
+    return render(request, 'edit-profile.html', context)
 
 
 def profile_delete(request):
+    profile = get_profile()
+    if request.method == 'POST':
+        profile.delete()
+        return redirect('home_page')
     return render(request, 'delete-profile.html')
