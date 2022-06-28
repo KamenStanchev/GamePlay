@@ -26,18 +26,13 @@ def home_page(request):
 
 
 def dashboard(request):
-    profile = get_profile()
-    if profile:
-        model = Model.objects.all()
-        context = {
-            'model': model,
-        }
-        return render(request, 'dashboard.html', context)
-    else:
-        not_profile = True
-        context = {
-            'not_profile': not_profile,
-        }
+    models = Model.objects.all()
+    if not models:
+        models = None
+
+    context = {
+        'models': models,
+    }
 
     return render(request, 'dashboard.html', context)
 
@@ -46,8 +41,10 @@ def game_create(request):
     return render(request, 'create-game.html')
 
 
-def game_details(request):
-    return render(request, 'details-game.html')
+def game_details(request, id):
+    model = Model.objects.get(id=id)
+    context = {'model': model, }
+    return render(request, 'details-game.html', context)
 
 
 def game_edit(request):

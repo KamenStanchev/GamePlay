@@ -8,26 +8,28 @@
             <div class="game-header">
                 <!-- game image -->
                 <img class="game-img"
-                     src="https://image.api.playstation.com/cdn/EP0001/CUSA04040_00/LRI3Rg5MKOi5AkefFaMcChNv5WitM7sz.png"
+                     src="{{ model.image_url }}"
                      alt='game image'/>
                 <!-- title and rating -->
-                <h1>UNO <span class="levels">Rating: 4.3</span></h1>
+                <h1>{{ model.title }}: <span class="levels">Rating: {{ model.rating }}</span></h1>
                 <!-- game category -->
-                <p><span class="type">Category: Board/Card Game</span></p>
+                <p><span class="type">Category: {{ model.category }}</span></p>
                 <!-- game max level (if any) -->
-                <p><span class="type">Max Level: 10</span></p>
+                {% if model.max_level %}
+                    <p><span class="type">Max Level: {{ model.max_level }}</span></p>
+                {% endif %}
             </div>
             <!-- game summary (if any)-->
+            {% if model.summary %}
             <p class="text">
-                Uno is an American shedding-type card game that is played with a specially printed deck. The game's
-                general principles put it into the crazy eights family of card games, and it is similar to the
-                traditional European game mau-mau.
+                {{ model.summary}}
             </p>
+            {% endif %}
 
             <!-- Edit/Delete buttons -->
             <div class="buttons">
-                <a href="#" class="button">Edit</a>
-                <a href="#" class="button">Delete</a>
+                <a href="{% url 'game_edit' model.id %}" class="button">Edit</a>
+                <a href="{% url 'game_delete' model.id %}" class="button">Delete</a>
             </div>
         </div>
     </section>
