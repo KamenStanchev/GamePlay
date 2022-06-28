@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
+from GamePlay.GamePlay_app.forms import ModelForm
 from GamePlay.GamePlay_app.models import Profile, Model
 
 
@@ -38,7 +39,18 @@ def dashboard(request):
 
 
 def game_create(request):
-    return render(request, 'create-game.html')
+    if request.method == 'POST':
+        form = ModelForm(request.POST)
+        if form.is_valid():
+            form_to_save = form.save(commit=False)
+            form_to_save.save()
+            return redirect('game_details', form_to_save.id)
+    else:
+        form = ModelForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'create-game.html', context)
 
 
 def game_details(request, id):
