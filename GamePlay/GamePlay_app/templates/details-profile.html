@@ -7,23 +7,27 @@
         <div class="info-section">
             <div class="game-header">
                 <!-- default profile image (if the user does NOT have any)-->
-                <img class="game-img" src="/GamePlay/static/images/default-user.jpg" alt='profile-image'/>
-                <!-- if the user has a profile image -->
-                <img class="game-img" src="" alt='profile-image'/>
+                {% if profile.profile_picture is not None %}
+                <img class="game-img" src='{{ profile.profile_picture }}' alt="has-profile-image"/>
+{#                <!-- if the user has a profile image -->#}
+{#
+                {% else %}
+                 <img class="game-img" src="/GamePlay/static/images/default-user.jpg" alt='no-profile-image'/>}
                 <!-- user full name (if any) -->
-                <h1>Aleksandra Raykova</h1>
+                {% endif %}
+                <h1>{{ full_name }}</h1>
                 <!-- user email -->
-                <p class="text">Email: aleksandra@mail.com</p>
+                <p class="text">{{ profile.email }}</p>
                 <!-- user age -->
-                <p class="text">Age: 28</p>
+                <p class="text">{{ profile.age }}</p>
                 <!-- total number of games -->
-                <p class="text">Total games: 3</p>
+                <p class="text">Total games: {{ total_games }}</p>
                 <!-- average rating for all games -->
-                <p class="text">Average rating: 2.9</p>
+                <p class="text">Average rating: {{ average_rating }}</p>
                 <!-- Edit/Delete buttons -->
                 <div class="buttons">
-                    <a href="#" class="button">Edit</a>
-                    <a href="#" class="button">Delete</a>
+                    <a href="{% url 'profile_edit' %}" class="button">Edit</a>
+                    <a href="{% url 'profile_delete' %}" class="button">Delete</a>
                 </div>
             </div>
         </div>

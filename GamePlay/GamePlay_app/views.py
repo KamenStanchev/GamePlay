@@ -24,6 +24,7 @@ def home_page(request):
         }
         return render(request, 'home-page.html', context)
 
+
 def dashboard(request):
     profile = get_profile()
     if profile:
@@ -48,20 +49,41 @@ def game_create(request):
 def game_details(request):
     return render(request, 'details-game.html')
 
+
 def game_edit(request):
     return render(request, 'edit-game.html')
+
 
 def game_delete(request):
     return render(request, 'delete-game.html')
 
+
 def profile_create(request):
     return render(request, 'create-profile.html')
 
+
 def profile_details(request):
-    return render(request, 'details-profile.html')
+    profile = get_profile()
+    models = Model.objects.all()
+    total_games = len(models)
+    if total_games > 0:
+        average_rating = sum(model.rating for model in models)/total_games
+    else:
+        average_rating = 0.0
+    full_name = profile.first_name + ' ' + profile.last_name
+
+    context = {
+        'profile': profile,
+        'full_name': full_name,
+        'total_games': total_games,
+        'average_rating': average_rating,
+    }
+    return render(request, 'details-profile.html', context)
+
 
 def profile_edit(request):
     return render(request, 'edit-profile.html')
+
 
 def profile_delete(request):
     return render(request, 'delete-profile.html')
