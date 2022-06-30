@@ -150,9 +150,19 @@ def profile_edit(request):
     return render(request, 'edit-profile.html', context)
 
 
+def delete_models(models):
+    if models:
+        number = len(models)
+        for i in range(len(models)-1, -1, -1):
+            model = models[i]
+            model.delete()
+
+
 def profile_delete(request):
     profile = get_profile()
+    models = Model.objects.all()
     if request.method == 'POST':
         profile.delete()
+        delete_models(models)
         return redirect('home_page')
     return render(request, 'delete-profile.html')
