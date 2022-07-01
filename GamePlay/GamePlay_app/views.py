@@ -99,9 +99,9 @@ def profile_create(request):
             return redirect('home_page')
     else:
         form = ProfileForm()
-        form.fields['first_name'].widget = forms.HiddenInput()
-        form.fields['last_name'].widget = forms.HiddenInput()
-        form.fields['profile_picture'].widget = forms.HiddenInput()
+    form.fields['first_name'].widget = forms.HiddenInput()
+    form.fields['last_name'].widget = forms.HiddenInput()
+    form.fields['profile_picture'].widget = forms.HiddenInput()
 
     context = {
         'form': form,
@@ -152,7 +152,6 @@ def profile_edit(request):
 
 def delete_models(models):
     if models:
-        number = len(models)
         for i in range(len(models)-1, -1, -1):
             model = models[i]
             model.delete()
